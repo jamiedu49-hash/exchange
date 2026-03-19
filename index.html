@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>志愿服务隐形账本 - 深度推演版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Microsoft YaHei', sans-serif; background-color: #f1f5f9; }
+        .card { transition: all 0.3s ease; }
+        .hidden { display: none !important; }
+        .result-box { animation: slideDown 0.5s ease forwards; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="p-8">
+
+    <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-md p-6 mb-8 flex justify-between items-center border-l-8 border-teal-500">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-800">志愿服务隐形账本：社会实验</h1>
+            <p class="text-slate-500 mt-2" id="header-desc">第一阶段：请将你手中的“精力币”分配给以下四个志愿岗位</p>
+        </div>
+        <div class="text-center bg-teal-50 px-6 py-4 rounded-lg border border-teal-200">
+            <p class="text-sm text-teal-700 font-bold mb-1">你的剩余精力币</p>
+            <div class="text-5xl font-black text-teal-600" id="remainingCoins">10</div>
+        </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6" id="cardsContainer">
+        
+        <div class="card bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden">
+            <h2 class="text-xl font-bold text-slate-800 mb-4 pb-2 border-b">🅰️ 大型赛事外语翻译</h2>
+            <div class="flex-grow">
+                <p class="text-red-600 font-bold mb-2">付出成本：<span class="font-normal text-slate-700">连续一周高强度站立</span></p>
+                <p class="text-blue-600 font-bold mb-4">预期回报：<span class="font-normal text-slate-700">国家级证书、结交精英</span></p>
+                
+                <div id="shock-A" class="hidden mt-4 p-3 bg-red-100 text-red-800 rounded-lg text-sm font-bold animate-pulse">
+                    ⚡ 突发：管理极其混乱，经常被组委会大吼大叫！(心理成本剧增)
+                </div>
+                
+                <div id="result-A" class="hidden mt-4 p-4 bg-slate-800 text-white rounded-lg text-md font-bold result-box">
+                    </div>
+            </div>
+            
+            <div class="mt-6 flex items-center justify-between bg-slate-50 p-3 rounded-lg">
+                <span class="text-slate-600 font-bold">投入精力：</span>
+                <div class="flex items-center space-x-4">
+                    <button onclick="updateCoin('A', -1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-300 text-xl font-bold text-slate-600 hover:bg-slate-100 shadow-sm">-</button>
+                    <span id="score-A" class="text-2xl font-bold w-8 text-center text-teal-600">0</span>
+                    <button onclick="updateCoin('A', 1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-300 text-xl font-bold text-slate-600 hover:bg-slate-100 shadow-sm">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden">
+            <h2 class="text-xl font-bold text-slate-800 mb-4 pb-2 border-b">🅱️ 临终关怀医院陪伴者</h2>
+            <div class="flex-grow">
+                <p class="text-red-600 font-bold mb-2">付出成本：<span class="font-normal text-slate-700">极大情感消耗、直面死亡压力</span></p>
+                <p class="text-blue-600 font-bold mb-4">预期回报：<span class="font-normal text-slate-700">深刻的生命感悟</span></p>
+                
+                <div id="shock-B" class="hidden mt-4 p-3 bg-green-100 text-green-800 rounded-lg text-sm font-bold animate-pulse">
+                    ⚡ 突发：老人离世前，家属流着泪握着你的手称你为天使。(内在报酬极具放大)
+                </div>
+
+                <div id="result-B" class="hidden mt-4 p-4 bg-slate-800 text-white rounded-lg text-md font-bold result-box"></div>
+            </div>
+            <div class="mt-6 flex items-center justify-between bg-slate-50 p-3 rounded-lg">
+                <span class="text-slate-600 font-bold">投入精力：</span>
+                <div class="flex items-center space-x-4">
+                    <button onclick="updateCoin('B', -1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-300 text-xl font-bold text-slate-600 hover:bg-slate-100 shadow-sm">-</button>
+                    <span id="score-B" class="text-2xl font-bold w-8 text-center text-teal-600">0</span>
+                    <button onclick="updateCoin('B', 1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-300 text-xl font-bold text-slate-600 hover:bg-slate-100 shadow-sm">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden">
+            <h2 class="text-xl font-bold text-slate-800 mb-4 pb-2 border-b">©️ 线上科普文章校对</h2>
+            <div class="flex-grow">
+                <p class="text-red-600 font-bold mb-2">付出成本：<span class="font-normal text-slate-700">枯燥、耗费视力、孤独</span></p>
+                <p class="text-blue-600 font-bold mb-4">预期回报：<span id="reward-C" class="font-normal text-slate-700">时间自由、在文章末尾署名</span></p>
+                
+                <div id="shock-C" class="hidden mt-4 p-3 bg-red-100 text-red-800 rounded-lg text-sm font-bold animate-pulse">
+                    ⚡ 突发：机构经费不足，取消给志愿者署名的福利。(外在报酬被剥夺)
+                </div>
+
+                <div id="result-C" class="hidden mt-4 p-4 bg-slate-800 text-white rounded-lg text-md font-bold result-box"></div>
+            </div>
+            <div class="mt-6 flex items-center justify-between bg-slate-50 p-3 rounded-lg">
+                <span class="text-slate-600 font-bold">投入精力：</span>
+                <div class="flex items-center space-x-4">
+                    <button onclick="updateCoin('C', -1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-300 text-xl font-bold text-slate-600 hover:bg-slate-100 shadow-sm">-</button>
+                    <span id="score-C" class="text-2xl font-bold w-8 text-center text-teal-600">0</span>
+                    <button onclick="updateCoin('C', 1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-300 text-xl font-bold text-slate-600 hover:bg-slate-100 shadow-sm">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col relative overflow-hidden">
+            <h2 class="text-xl font-bold text-slate-800 mb-4 pb-2 border-b">🇩 社区周末清扫助手</h2>
+            <div class="flex-grow">
+                <p class="text-red-600 font-bold mb-2">付出成本：<span class="font-normal text-slate-700">纯体力劳动、容易被路人不理解</span></p>
+                <p class="text-blue-600 font-bold mb-4">预期回报：<span class="font-normal text-slate-700">居委会口头表扬、免费的盒饭</span></p>
+                
+                <div id="shock-D" class="hidden mt-4 p-3 bg-slate-200 text-slate-800 rounded-lg text-sm font-bold animate-pulse">
+                    ⚡ 突发：一切照常进行，平平淡淡才是真。
+                </div>
+
+                <div id="result-D" class="hidden mt-4 p-4 bg-slate-800 text-white rounded-lg text-md font-bold result-box"></div>
+            </div>
+            <div class="mt-6 flex items-center justify-between bg-slate-50 p-3 rounded-lg">
+                <span class="text-slate-600 font-bold">投入精力：</span>
+                <div class="flex items-center space-x-4">
+                    <button onclick="updateCoin('D', -1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-300 text-xl font-bold text-slate-600 hover:bg-slate-100 shadow-sm">-</button>
+                    <span id="score-D" class="text-2xl font-bold w-8 text-center text-teal-600">0</span>
+                    <button onclick="updateCoin('D', 1)" class="control-btn w-10 h-10 rounded-full bg-white border border-slate-300 text-xl font-bold text-slate-600 hover:bg-slate-100 shadow-sm">+</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="max-w-5xl mx-auto mt-8 text-center">
+        <button id="actionBtn" onclick="handleAction()" class="bg-slate-300 text-slate-500 font-bold text-xl py-4 px-8 rounded-full shadow-lg cursor-not-allowed transition-all" disabled>
+            ⚡ 请先花完所有精力币
+        </button>
+    </div>
+
+    <script>
+        let totalCoins = 10;
+        let scores = { A: 0, B: 0, C: 0, D: 0 };
+        let phase = 1; // 1: 初始投资, 2: 现实冲击与再分配, 3: 结局展示
+
+        function updateCoin(role, amount) {
+            if (phase === 3) return; // 结局阶段锁定操作
+            if (amount === 1 && totalCoins === 0) return;
+            if (amount === -1 && scores[role] === 0) return;
+
+            scores[role] += amount;
+            totalCoins -= amount;
+
+            document.getElementById('score-' + role).innerText = scores[role];
+            document.getElementById('remainingCoins').innerText = totalCoins;
+
+            checkButtonState();
+        }
+
+        function checkButtonState() {
+            const btn = document.getElementById('actionBtn');
+            if (phase === 1 || phase === 2) {
+                if (totalCoins === 0) {
+                    btn.disabled = false;
+                    if (phase === 1) {
+                        btn.className = "bg-red-500 hover:bg-red-600 text-white font-bold text-xl py-4 px-8 rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1";
+                        btn.innerText = "⚡ 确认投资，触发现实冲击！";
+                    } else if (phase === 2) {
+                        btn.className = "bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xl py-4 px-8 rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1";
+                        btn.innerText = "🔍 停止调整，查看最终社会影响";
+                    }
+                } else {
+                    btn.disabled = true;
+                    btn.className = "bg-slate-300 text-slate-500 font-bold text-xl py-4 px-8 rounded-full shadow-lg cursor-not-allowed transition-all";
+                    btn.innerText = "⚡ 请先花完所有精力币";
+                }
+            }
+        }
+
+        function handleAction() {
+            const btn = document.getElementById('actionBtn');
+            
+            if (phase === 1) {
+                // 进入阶段二：现实冲击
+                phase = 2;
+                document.getElementById('header-desc').innerText = "第二阶段：突发状况发生！你可以在此撤资并重新分配筹码。";
+                
+                document.getElementById('shock-A').classList.remove('hidden');
+                document.getElementById('shock-B').classList.remove('hidden');
+                document.getElementById('shock-C').classList.remove('hidden');
+                document.getElementById('shock-D').classList.remove('hidden');
+                document.getElementById('reward-C').classList.add('line-through', 'text-slate-400');
+
+                // 允许调整，只要币花完就能进入阶段三
+                checkButtonState();
+                
+            } else if (phase === 2) {
+                // 进入阶段三：显示结局
+                phase = 3;
+                document.getElementById('header-desc').innerText = "第三阶段：推演结束。个体的趋利避害，造就了宏观的社会现实。";
+                
+                // 禁用所有加减按钮
+                const controls = document.querySelectorAll('.control-btn');
+                controls.forEach(c => { c.disabled = true; c.classList.add('opacity-50', 'cursor-not-allowed'); });
+
+                // 隐藏突发状况框，显示结局框
+                ['A', 'B', 'C', 'D'].forEach(role => {
+                    document.getElementById('shock-' + role).classList.add('hidden');
+                    const resultBox = document.getElementById('result-' + role);
+                    resultBox.classList.remove('hidden');
+                    resultBox.innerHTML = getResultText(role, scores[role]);
+                });
+
+                btn.className = "bg-teal-600 hover:bg-teal-700 text-white font-bold text-xl py-4 px-8 rounded-full shadow-xl transition-all";
+                btn.innerText = "🔄 重新开始";
+                
+            } else if (phase === 3) {
+                location.reload();
+            }
+        }
+
+        // 核心逻辑：根据最终得分生成结局
+        function getResultText(role, score) {
+            let text = "";
+            let colorClass = "";
+            
+            if (role === 'A') {
+                if (score === 0) {
+                    text = "🚨 岗位瘫痪：赛事陷入混乱，国际来宾无人接待，国际形象严重受损。"; colorClass = "text-red-400";
+                } else {
+                    text = "⚠️ 惨烈运转：留下的志愿者顶住了高强度的辱骂与压力，勉强维持了赛事，但多数人产生了严重的职业倦怠。"; colorClass = "text-yellow-400";
+                }
+            } else if (role === 'B') {
+                if (score >= 5) {
+                    text = "❌ 志愿失灵 (爱心过剩)：大量志愿者扎堆涌入，争抢着陪伴老人。反而打扰了病房的清净，导致医疗秩序混乱！"; colorClass = "text-red-400";
+                } else if (score > 0) {
+                    text = "✅ 完美治愈：资源精准匹配。少数志愿者与老人建立了极深的连接，实现了彼此救赎。"; colorClass = "text-green-400";
+                } else {
+                    text = "🧊 冰冷现实：临终病房空空荡荡，老人们只能在孤独与恐惧中离世。"; colorClass = "text-slate-400";
+                }
+            } else if (role === 'C') {
+                if (score === 0) {
+                    text = "🚨 永久停更：因为失去了署名的外在激励，无人愿意承担枯燥的校对。乡村儿童彻底失去了获取这部分科普知识的渠道。"; colorClass = "text-red-400";
+                } else {
+                    text = "⭐ 火种保留：你们仅凭对知识传播的热爱（纯道德驱动），硬是扛下了枯燥的工作。"; colorClass = "text-blue-400";
+                }
+            } else if (role === 'D') {
+                if (score === 0) {
+                    text = "🚨 治理退化：社区垃圾逐渐堆积，多元协同治理失败，只能倒退回完全依赖政府雇佣保洁的模式。"; colorClass = "text-red-400";
+                } else {
+                    text = "🏗️ 基层基石：虽然没有光环，但这部分平淡的坚守，恰恰维持了城市最基础的整洁与运转。"; colorClass = "text-green-400";
+                }
+            }
+            
+            return `<span class="${colorClass}">${text}</span>`;
+        }
+    </script>
+</body>
+</html>
